@@ -1,0 +1,119 @@
+//CODE FOR PARENTHESIS CHECKING
+#include<stdio.h>
+#include<stdlib.h>
+#define bool int
+struct node
+{
+    char data;
+    struct node *next;
+};
+void push (struct node** top_ref,int newdata);
+int pop (struct node** top_ref);
+bool is_match(char char1,char char2)
+{
+    if(char1=="(")
+        return 1;
+    else
+        return 0;
+}
+bool are_par_match(char exp[])
+{
+    int i=0;
+    struct node *stack=NULL;
+    while(exp[i])
+    {
+        if(exp[i]=="(")
+            push(&stack,exp[i]);
+        else
+        {
+            if(stack==NULL)
+                return 0;
+            else if(!is_match(pop(&stack),exp[i]))
+                return 0;
+        }
+        i++;
+    }
+    if(stack==NULL)
+        return 1;
+    else
+        return 0;
+}
+int main()
+{
+    char exp[100];
+    printf("Enter the input\n");
+    scanf("%s",exp);
+    if(are_par_match(exp))
+        printf("Balanced parenthesis\n");
+    else
+        printf("Unbalanced parenthesis\n");
+    return 0;
+}
+void push(struct node** top_ref,int newdata)
+{
+    struct node* newnode=(struct node*)malloc(sizeof(struct node));
+    if (newnode==NULL)
+    {
+        printf("Stack Overflow\n");
+        getchar();
+        exit(0);
+    }
+    newnode->data=newdata;
+    newnode->next=(*top_ref);
+    (*top_ref)=newnode;
+}
+int pop(struct node** top_ref)
+{
+    char res;
+    struct node* top;
+    if(*top_ref==NULL)
+    {
+        printf("Stack Overflow");
+        getchar();
+        exit(0);
+    }
+    else
+    {
+        top=*top_ref;
+        res=top->next;
+        *top_ref=top->next;
+        free(top);
+        return res;
+    }
+}
+
+
+
+/* "Algorithm for queue using two stacks"
+
+For example: Suppose we push "a", "b, "c" to a stack.
+ If we are trying to implement a queue and we call the dequeue method 3 times,
+ we actually want the elements to come out in the order: "a", "b, "c"(because queue follows FIFO(first in first out))
+ which is in the opposite order they would come out if we popped from the stack.
+ So, basically, we need to access the elements in the reverse order that they exist in the stack.
+ The following algorithm will implement a queue using two stacks.
+
+(1) When calling the enqueue method, simply push the elements into the stack 1.
+(2) If the dequeue method is called,
+ push all the elements from stack 1 into stack 2,
+ which reverses the order of the elements. Now pop from stack 2. 
+
+
+
+"  Applications of Stack  "
+Expression Evaluation :Stack is used to evaluate prefix, postfix and infix expressions.
+Expression Conversion :An expression can be represented in prefix, postfix or infix notation.
+		       Stack can be used to convert one form of expression to another. 
+String Reversal       :Stack is used to reverse a string. We push the characters of string one by one into stack and then pop character from stack.
+Function Call         :Stack is used to keep information about the active functions or subroutines .
+Recursion             :Stack is used to store and restore the recursive function and its arguments.
+
+" Applications of Queue data structure "
+
+1. Queue is useful in CPU scheduling, Disk Scheduling.When multiple processes require CPU at the same time, various CPU scheduling algorithms are used
+   which are implemented using Queue data structure.
+2. When data is transferred asynchronously between two processes.Queue is used for synchronization.
+   Examples : IO Buffers, pipes, file IO, etc.
+3. In print spooling, documents are loaded into a buffer and then the printer pulls them off the buffer at its own rate.
+   Spooling also lets you place a number of print jobs on a queue instead of waiting for each one to finish before specifying the next one.
+4. In real life, Call Center phone systems will use Queues, to hold people calling them in an order, until a service representative is free.*/
